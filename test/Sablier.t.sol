@@ -10,7 +10,7 @@ import {SablierV2NFTDescriptor} from "@sablier/v2-core/src/SablierV2NFTDescripto
 import {SablierV2Batch} from "@sablier/v2-periphery/src/SablierV2Batch.sol";
 import {SablierV2MerkleStreamerFactory} from "@sablier/v2-periphery/src/SablierV2MerkleStreamerFactory.sol";
 import {Lockup, LockupLinear, Broker} from "@sablier/v2-core/src/types/DataTypes.sol";
-import { ud60x18 } from "@prb/math/src/UD60x18.sol";
+import {ud60x18} from "@prb/math/src/UD60x18.sol";
 
 contract SablierTest is Test {
     Token public token;
@@ -24,13 +24,22 @@ contract SablierTest is Test {
     address recipient = vm.addr(9384579384);
 
     function setUp() public {
+        vm.createSelectFork(vm.envString("PHEONIX_RPC_URL"));
+
+        vm.prank(owner);
         token = new Token();
 
         assertEq(token.totalSupply(), 100000 ether);
+
+        vm.prank(owner);
+        token.approve(address(sablierV2LockupLinear), UINT256_MAX);
     }
 
     function testCreateVesting() public {
+        LockupLinear.CreateWithDurations memory params = _getInputForFullVest();
 
+        vm.prank(owner);
+        sablierV2LockupLinear.createWithDurations(params);
     }
 
     function _getInputForFullVest() internal view returns(LockupLinear.CreateWithDurations memory params) {
