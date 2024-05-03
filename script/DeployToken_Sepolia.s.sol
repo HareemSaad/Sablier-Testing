@@ -2,11 +2,13 @@
 pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
+import "./../src/Token.sol";
 
-contract CounterScript is Script {
+contract TokenDeployScript is Script {
     function setUp() public {}
 
     function run() public {
-        vm.broadcast();
+        vm.broadcast(vm.envUint("SEPOLIA_PK"));
+        new Token();
     }
 }
