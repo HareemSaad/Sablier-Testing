@@ -2,13 +2,15 @@
 pragma solidity ^0.8.13;
 
 import {Test, console} from "forge-std/Test.sol";
-import {Token} from "../src/Token.sol";
+import {Token, IERC20} from "../src/Token.sol";
 import {SablierV2Comptroller} from "@sablier/v2-core/src/SablierV2Comptroller.sol";
 import {SablierV2LockupDynamic} from "@sablier/v2-core/src/SablierV2LockupDynamic.sol";
 import {SablierV2LockupLinear} from "@sablier/v2-core/src/SablierV2LockupLinear.sol";
 import {SablierV2NFTDescriptor} from "@sablier/v2-core/src/SablierV2NFTDescriptor.sol";
 import {SablierV2Batch} from "@sablier/v2-periphery/src/SablierV2Batch.sol";
 import {SablierV2MerkleStreamerFactory} from "@sablier/v2-periphery/src/SablierV2MerkleStreamerFactory.sol";
+import {Lockup, LockupLinear, Broker} from "@sablier/v2-core/src/types/DataTypes.sol";
+import { ud60x18 } from "@prb/math/src/UD60x18.sol";
 
 contract SablierTest is Test {
     Token public token;
@@ -18,6 +20,8 @@ contract SablierTest is Test {
     SablierV2NFTDescriptor sablierV2NFTDescriptor = SablierV2NFTDescriptor(0xda55fB3E53b7d205e37B6bdCe990b789255e4302); 
     SablierV2Batch sablierV2Batch = SablierV2Batch(0x3eb9F8f80354a157315Fce64990C554434690c2f);
     SablierV2MerkleStreamerFactory sablierV2MerkleStreamerFactory = SablierV2MerkleStreamerFactory(0xdB07a1749D5Ca49909C7C4159652Fbd527c735B8);
+    address owner = vm.addr(7368756837);
+    address recipient = vm.addr(9384579384);
 
     function setUp() public {
         token = new Token();
@@ -25,9 +29,26 @@ contract SablierTest is Test {
         assertEq(token.totalSupply(), 100000 ether);
     }
 
-    function test_Increment() public {
+    function testCreateVesting() public {
+
     }
 
-    function testFuzz_SetNumber(uint256 x) public {
+    function _getInputForFullVest() internal view returns(LockupLinear.CreateWithDurations memory params) {
+        return params = LockupLinear.CreateWithDurations({
+            sender: owner,
+            recipient: recipient,
+            totalAmount: 100000 ether,
+            asset: IERC20(address(token)),
+            cancelable: true,
+            transferable: true,
+            durations: LockupLinear.Durations({
+                cliff: 3 weeks,
+                total: 52 weeks
+            }),
+            broker: Broker({
+                account: address(0),
+                fee: ud60x18(0)
+            })
+        });
     }
 }
