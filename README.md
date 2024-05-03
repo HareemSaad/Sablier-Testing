@@ -1,66 +1,23 @@
-## Foundry
+## Test for setting up ELTK sablier vesting contracts
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+### Commands
 
-Foundry consists of:
+#### Test
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
-
-## Documentation
-
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
+```bash
+forge test -vvv
 ```
 
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+### Tokenomics
+| Buckets              | Percentage | Amount          | Initial Vesting | Cliff Months | Issuing Months |
+|----------------------|------------|-----------------|-----------------|--------------|----------------|
+| Pre-Seed             | 6.67%      | 6,666,667       | 20%             | 3            | 12             |
+| Seed                 | 15.00%     | 15,000,000      | 25%             | 6            | 12             |
+| KOL Round            | 5.00%      | 5,000,000       | 20%             | 3            | 12             |
+| LBP                  | 4.44%      | 4,444,444       | 100%            | -            | 12             |
+| Airdrop (All Phases) | 4.00%      | 4,000,000       | 25%             | 0            | 18             |
+| Team                 | 17.00%     | 17,000,000      | 25%             | 6            | 18             |
+| Advisor              | 2.00%      | 2,000,000       | -               | 6            | 18             |
+| Treasury             | 20.00%     | 20,000,000      | 10%             | 0            | 48             |
+| Ecosystem Funds      | 25.89%     | 25,888,889      | 25%             | 0            | 48             |
+| **SUM**              | **100%**   | **100,000,000** | -               | -            | -              |
