@@ -62,7 +62,7 @@ contract SablierTest is Test {
         assertEq(token.balanceOf(recipient), 0);
     }
 
-    function testUnlockClffStream() public {
+    function testUnlockCliffStream() public {
         testCreateVesting();
 
         LockupDynamic.Segment[] memory segments = sablierV2LockupDynamic.getSegments(streamId);
@@ -73,18 +73,39 @@ contract SablierTest is Test {
         vm.prank(recipient);
         sablierV2LockupDynamic.withdraw(streamId, recipient, amount);
 
+        vm.warp(segments[1].milestone - 1);
+        assertEq(sablierV2LockupDynamic.withdrawableAmountOf(streamId), 0 ether);
+
         vm.warp(segments[1].milestone);
         assertEq(sablierV2LockupDynamic.withdrawableAmountOf(streamId), 0 ether);
 
         vm.warp(segments[1].milestone + 1);
         assertGt(sablierV2LockupDynamic.withdrawableAmountOf(streamId), 0 ether);
-        console.log(sablierV2LockupDynamic.withdrawableAmountOf(streamId));
 
         vm.warp(segments[2].milestone);
         amount = sablierV2LockupDynamic.withdrawableAmountOf(streamId);
         assertEq(amount, 80000 ether);
         vm.prank(recipient);
         sablierV2LockupDynamic.withdraw(streamId, recipient, amount);
+    }
+
+    function testUnlockCliffStream(uint256 time) public {
+        testCreateVesting();
+
+        LockupDynamic.Segment[] memory segments = sablierV2LockupDynamic.getSegments(streamId);
+
+        time = bound(time, segments[0].milestone, segments[2].milestone);
+
+        vm.warp(time);
+        uint128 amount = sablierV2LockupDynamic.withdrawableAmountOf(streamId);
+
+        if (time <= segments[1].milestone) {
+            assertEq(amount, 20000 ether);
+        } else if (time >= segments[2].milestone) { 
+            assertEq(amount, 100000 ether);
+        } else {
+            assertGt(amount, 20000 ether);
+        }
     }
 
     // should withdraw some amount
@@ -192,3 +213,8 @@ contract SablierTest is Test {
 // 0,                       1000000000000000000,1717443540, Tuesday, June 4, 2024 12:39:00 AM
 // 6593.404259303910360800, 1000000000000000000,1717443541, Tuesday, June 4, 2024 12:39:01 AM
 // 73406.595740696089639200,1000000000000000000,1746301140, Sunday, May 4, 2025 12:39:00 AM
+
+/**
+ * As I said the formula is: cliffAmount - initialUnlockedAmount
+ * the cliff amount is (totalAmount-initialUnlockAmount)*cliffDuration/totalDuration
+ */
