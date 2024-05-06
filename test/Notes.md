@@ -3,6 +3,7 @@
 |-----------|----------|-------------|--------------------|------------|----------|---------|----------|
 |`LinearLockup_Durations`|`createWithDurations(params)`| waits till cliff period and then linearly unlocks tokens till end time | ❌ | ✅ | ✅ | ❌ | |
 |`LinearLockup_Range`|`createWithRange(params)`| waits till cliff period and then linearly unlocks tokens till end time | ❌ | ✅ | ✅  | ✅ | |
+|`DynamicLockup_Milestone`|`createWithMilestones(params)`| In my example, Releases initial vesting then waits till cliff period and then linearly unlocks tokens till end time | ✅ | ✅ | ✅  | ✅ | |
 
 
 ## Functions
